@@ -1,4 +1,4 @@
-exports.categoriesData = require("./categories.js");
-exports.commentsData = require("./comments.js");
-exports.reviewsData = require("./reviews.js");
-exports.usersData = require("./users.js");
+exports.categoryData = require("./categories.js");
+exports.commentData = require("./comments.js");
+exports.reviewData = require("./reviews.js");
+exports.userData = require("./users.js");
