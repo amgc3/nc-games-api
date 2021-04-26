@@ -1,4 +1,4 @@
-const db = require("./");
+const db = require("./connection.js");
 
 const createTables = () => {
   return db
@@ -28,8 +28,8 @@ const createTables = () => {
             title VARCHAR(250) NOT NULL,
             review_body VARCHAR(500) NOT NULL,
             designer VARCHAR(150),
-            review_img_url VARCHAR(300),
-            votes INT,
+            review_img_url VARCHAR(300) DEFAULT "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg" ,
+            votes INT DEFAULT 0,
             category VARCHAR(50) REFERENCES categories(slug) NOT NULL,
             owner VARCHAR(150) REFERENCES users(username) NOT NULL
         )
@@ -41,8 +41,8 @@ const createTables = () => {
                 comment_id SERIAL PRIMARY KEY,
                 author VARCHAR(150) REFERENCES users(username) NOT NULL,
                 review_id INT REFERENCES reviews(review_id) NOT NULL,
-                votes INT,
-                created_at DATE NOT NULL,
+                votes INT DEFAULT 0,
+                created_at DATE DEFAULT CURRENT_TIMESTAMP,
                 body VARCHAR(300) NOT NULL
             )
             `);
