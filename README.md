@@ -35,7 +35,7 @@ You should have separate tables for `categories`, `reviews`, `users` and `commen
 
 Each category should have:
 
-- `slug` field which is a unique string that acts as the table's primary key
+- `slug` field which is a unique string that acts as the table's primary key // VARCHAR (250) PRIMARY KEY [UNIQUE]
 - `description` field which is a string giving a brief description of a given category
 
 Each user should have:
@@ -46,21 +46,21 @@ Each user should have:
 
 Each review should have:
 
-- `review_id` which is the primary key
+- `review_id` which is the primary key // add in primary key
 - `title`
 - `review_body`
 - `designer`
 - `review_img_url` defaults to `https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg`
 - `votes` defaults to 0
-- `category` field which references the slug in the categories table
-- `owner` field that references a user's primary key (username)
-- `created_at` defaults to the current timestamp
+- `category` field which references the slug in the categories table // has to be created after categories
+- `owner` field that references a user's primary key (username) // has to be created after users
+- `created_at` defaults to the current timestamp // Date.now();
 
 Each comment should have:
 
 - `comment_id` which is the primary key
-- `author` field that references a user's primary key (username)
-- `review_id` field that references an review's primary key
+- `author` field that references a user's primary key (username) // has to b created after users
+- `review_id` field that references an review's primary key // has to be created after reviews
 - `votes` defaults to 0
 - `created_at` defaults to the current timestamp
 - `body`
