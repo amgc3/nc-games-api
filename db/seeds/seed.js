@@ -1,6 +1,6 @@
-const format = require("pg-format");
-const db = require("../connection.js");
-const { dropTables, createTables } = require("../manage-tables.js");
+const format = require('pg-format');
+const db = require('../connection.js');
+const { dropTables, createTables } = require('../manage-tables.js');
 
 exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
   // add seeding functionality here
@@ -12,14 +12,14 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
     })
     .then(() => {
       const insertCategoriesQueryString = format(
-        "INSERT INTO categories ( slug, description) VALUES %L RETURNING *;",
+        'INSERT INTO categories ( slug, description) VALUES %L RETURNING *;',
         categoryData.map(({ slug, description }) => [slug, description])
       );
       return db.query(insertCategoriesQueryString);
     })
     .then(() => {
       const insertUsersQueryString = format(
-        "INSERT INTO users (username, avatar_url, name) VALUES %L RETURNING *;",
+        'INSERT INTO users (username, avatar_url, name) VALUES %L RETURNING *;',
         userData.map(({ username, avatar_url, name }) => [
           username,
           avatar_url,
@@ -56,6 +56,9 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
         )
       );
       return db.query(insertReviewsQueryString);
+    })
+    .then((result) => {
+      console.log(result.rows);
     })
     .then(() => {
       const insertCommentsQueryString = format(
