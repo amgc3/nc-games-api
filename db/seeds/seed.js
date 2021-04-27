@@ -1,7 +1,7 @@
 const format = require("pg-format");
 const db = require("../connection.js");
 const { dropTables, createTables } = require("../manage-tables.js");
-const { keyReplacer } = require("../utils/data-manipulation.js");
+const { keyReplacer, makeReference } = require("../utils/data-manipulation.js");
 
 exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
   return dropTables()
@@ -57,9 +57,12 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
     })
     .then((result) => {
       const reviewsInTable = result.rows;
+      const reviewsReference = makeReference(reviewsInTable);
+      console.log(reviewsReference);
       // get the lookup table {title: review_id}
       // insert correct id at belongs_to
       // change key belongs_to to review_id
+      //belongs_to == title
       const newCommentData = commentData.map((commentObject) => {
         return keyReplacer(commentObject, "created_by", "author");
       });
@@ -69,7 +72,7 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
       (author, review_id, votes, created_at, body)
       VALUES %L RETURNING *;
       `,
-        newCommentData.map(({ author, review_id, votes, created_at, body }) => [
+        newCommentData.map(({ author, review_id, votes = 0, created_at, body }) => [
           author,
           review_id,
           votes,
