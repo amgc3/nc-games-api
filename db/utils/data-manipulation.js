@@ -1,9 +1,8 @@
 // extract any functions you are using to manipulate your data, into this file
-exports.unixGetter = (reviewData) => {
-    const dateString  = new Date(reviewData.created_at).toISOString();
-    return(dateString);
-
-}
+exports.unixGetter = (created_at) => {
+  const dateString = new Date(created_at);
+  return dateString;
+};
 // const dateConverter = new Date(unixTimeStamp).toISOString();
 // unixGetter({
 //     title: 'Culture a Love of Agriculture With Agricola',
@@ -17,3 +16,4 @@ exports.unixGetter = (reviewData) => {
 //     created_at: 1610964020514,
 //     votes: 1,
 //   });
+//console.log(unixGetter(1610964020514));
