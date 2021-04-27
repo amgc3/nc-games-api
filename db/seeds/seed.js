@@ -1,11 +1,9 @@
 const format = require("pg-format");
 const db = require("../connection.js");
 const { dropTables, createTables } = require("../manage-tables.js");
+const { keyReplacer } = require("../utils/data-manipulation.js");
 
 exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
-  // add seeding functionality here
-  // this function should take as argument(s) all the data it needs to seed
-  // it should insert this data into the relevant tables in your database
   return dropTables()
     .then(() => {
       return createTables();
@@ -58,19 +56,20 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
       return db.query(insertReviewsQueryString);
     })
     .then((result) => {
-      console.log(result.rows);
-    })
-    .then(() => {
-      //const newCommentData =  commentData.map((commentObject) => { replaces created_by with author})
-      // newObject[author] = newObject[created_by]
-      // delete newObject[created_by]
+      const reviewsInTable = result.rows;
+      // get the lookup table {title: review_id}
+      // insert correct id at belongs_to
+      // change key belongs_to to review_id
+      const newCommentData = commentData.map((commentObject) => {
+        return keyReplacer(commentObject, "created_by", "author");
+      });
       const insertCommentsQueryString = format(
         `
       INSERT INTO comments
       (author, review_id, votes, created_at, body)
       VALUES %L RETURNING *;
       `,
-        commentData.map(({ author, review_id, votes, created_at, body }) => [
+        newCommentData.map(({ author, review_id, votes, created_at, body }) => [
           author,
           review_id,
           votes,
@@ -79,8 +78,8 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
         ])
       );
       return db.query(insertCommentsQueryString);
-    })
-    .then((result) => {
-      console.log(result.rows);
     });
+  // .then((result) => {
+  //   console.log(result.rows);
+  // });
 };
