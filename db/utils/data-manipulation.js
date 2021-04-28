@@ -15,16 +15,19 @@ exports.makeReference = (objects) => {
     const id = object.review_id;
     referenceTable[title] = id;
   })
-  console.log(referenceTable);
   return referenceTable;
 }
 
-exports.idFetcher = (objects, referenceTable) => {
-  const newObjects = objects.map(comment => {
+exports.idFetcher = (comments, referenceTable) => {
+  const newCommentsWithId = comments.map(comment => {
     const newComment = {...comment};
-    console.log(newComment);
-    return newComment;
+    const belongs_to = newComment.belongs_to;
+    const review_id = referenceTable[belongs_to];
+    delete newComment.belongs_to;
+    newComment['review_id'] = review_id;
+    console.log(newComment)
+   return newComment;
    
   })
-  return newObjects
+  return newCommentsWithId;
 }

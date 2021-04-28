@@ -66,19 +66,33 @@ describe('idFetcher', () => {
     const ref = {
       Agricola: 1,
       Jenga: 2,
-      'Ultimate Werewolf': 3,
-      'Dolor reprehenderit': 4,
-      'Proident tempor et.': 5,
-      'Occaecat consequat officia in quis commodo.': 6,
-      'Mollit elit qui incididunt veniam occaecat cupidatat': 7,
-      'One Night Ultimate Werewolf': 8,
-      'A truly Quacking Game; Quacks of Quedlinburg': 9,
-      'Build you own tour de Yorkshire': 10,
-      "That's just what an evil person would say!": 11,
-      "Scythe; you're gonna need a bigger table!": 12,
-      "Settlers of Catan: Don't Settle For Less": 13
     }
     expect(idFetcher(input, ref)).not.toBe(input);
     expect(idFetcher(input, ref)).toHaveLength(2);
+  });
+  test('returns new object with belongs_to swapped with review_id', () => {
+    const input = [{belongs_to: 'Agricola'}];
+    const ref = {
+      Agricola: 1,
+      Jenga: 2,
+    }
+    expect(idFetcher(input, ref)).toEqual([{review_id: 1}]);
   })
+  test('returns new object with belongs_to swapped with review_id', () => {
+    const input = [{body: 'I loved this game too!',
+    belongs_to: 'Agricola',
+    author: 'happyamy2016',
+    votes: 16,
+    created_at: 1511354163389,}];
+    const ref = {
+      Agricola: 1,
+      Jenga: 2,
+    }
+    expect(idFetcher(input, ref)).toEqual([{body: 'I loved this game too!',
+    review_id: 1, 
+    author: 'happyamy2016',
+    votes: 16,
+    created_at: 1511354163389,}]);
+  })
+
 })
