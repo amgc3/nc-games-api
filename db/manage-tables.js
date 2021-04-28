@@ -41,7 +41,7 @@ const createTables = () => {
             CREATE TABLE comments(
                 comment_id SERIAL PRIMARY KEY,
                 author VARCHAR(150) REFERENCES users(username) NOT NULL,
-                review_id INT REFERENCES reviews(review_id) NOT NULL,
+                review_id INT REFERENCES reviews(review_id) NOT NULL ON DELETE CASCADE,
                 votes INT DEFAULT 0,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                 body VARCHAR(300) NOT NULL
@@ -54,5 +54,5 @@ const createTables = () => {
 const dropTables = () => {
   return db.query(`DROP TABLE IF EXISTS comments, reviews, users, categories;`);
 };
-//DEFAULT "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg"
+
 module.exports = { createTables, dropTables };
