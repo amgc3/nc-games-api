@@ -36,11 +36,11 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
             title,
             review_body,
             designer,
-            review_img_url,
-            votes,
+            review_img_url  = 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
+            votes = 0,
             category,
             owner,
-            created_at,
+            created_at = new Date.now(),
           }) => [
             title,
             review_body,
@@ -70,7 +70,7 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
       (author, review_id, votes, created_at, body)
       VALUES %L RETURNING *;
       `,
-        newCommentData.map(({ author, review_id, votes = 0, created_at, body }) => [
+        newCommentData.map(({ author, review_id, votes = 0, created_at = new Date.now(), body }) => [
           author,
           review_id,
           votes,
