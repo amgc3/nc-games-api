@@ -8,7 +8,11 @@ beforeEach(() => {
   return seed(testData);
 });
 
-describe("this is a test", () => {
+afterAll(() => {
+  return db.end();
+});
+
+describe("GET /api/categories", () => {
   test("print something", () => {
     console.log("in test");
   });
