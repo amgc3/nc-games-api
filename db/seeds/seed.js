@@ -58,7 +58,6 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
     .then((result) => {
       const reviewsInTable = result.rows;
       const reviewsReference = makeReference(reviewsInTable);
-      console.log(reviewsReference);
       const commentDataWithId = idFetcher(commentData, reviewsReference);
       const newCommentData = commentDataWithId.map((comment) => {
         return keyReplacer(comment, "created_by", "author");
