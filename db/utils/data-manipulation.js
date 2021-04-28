@@ -10,20 +10,19 @@ exports.keyReplacer = (commentObject, keyToReplace, newKey) => {
 
 exports.makeReference = (objects) => {
   const referenceTable = {};
-  objects.forEach(object => {
+  objects.forEach((object) => {
     const title = object.title;
     const id = object.review_id;
     referenceTable[title] = id;
-  })
+  });
   return referenceTable;
-}
+};
 
 exports.idFetcher = (comments, referenceTable) => {
-  const newCommentsWithId = comments.map(({belongs_to, ...comment} ) => {
+  const newCommentsWithId = comments.map(({ belongs_to, ...comment }) => {
     const review_id = referenceTable[belongs_to];
-    const newComment = {...comment, review_id};
-    console.log(newComment)
-   return newComment;
-  })
+    const newComment = { ...comment, review_id };
+    return newComment;
+  });
   return newCommentsWithId;
-}
+};

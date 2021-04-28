@@ -1,7 +1,11 @@
 const format = require("pg-format");
 const db = require("../connection.js");
 const { dropTables, createTables } = require("../manage-tables.js");
-const { keyReplacer, makeReference , idFetcher} = require("../utils/data-manipulation.js");
+const {
+  keyReplacer,
+  makeReference,
+  idFetcher,
+} = require("../utils/data-manipulation.js");
 
 exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
   return dropTables()
@@ -36,7 +40,7 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
             title,
             review_body,
             designer,
-            review_img_url  = 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
+            review_img_url = "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg",
             votes = 0,
             category,
             owner,
@@ -69,17 +73,16 @@ exports.seed = function ({ categoryData, commentData, reviewData, userData }) {
       (author, review_id, votes, created_at, body)
       VALUES %L RETURNING *;
       `,
-        newCommentData.map(({ author, review_id, votes = 0, created_at = new Date.now(), body }) => [
-          author,
-          review_id,
-          votes,
-          new Date(created_at),
-          body,
-        ])
+        newCommentData.map(
+          ({
+            author,
+            review_id,
+            votes = 0,
+            created_at = new Date.now(),
+            body,
+          }) => [author, review_id, votes, new Date(created_at), body]
+        )
       );
       return db.query(insertCommentsQueryString);
-    })
-  .then((result) => {
-    console.log(result.rows);
-  });
+    });
 };

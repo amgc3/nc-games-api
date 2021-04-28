@@ -1,3 +1,13 @@
+const db = require("../db/connection.js");
+
 exports.selectCategories = () => {
-  console.log("inside selectCategories");
+  return db
+    .query(
+      `
+  SELECT * FROM categories;
+  `
+    )
+    .then((result) => {
+      return result.rows;
+    });
 };
