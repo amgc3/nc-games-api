@@ -214,3 +214,47 @@ describe('GET /api/reviews', () => {
       });
   });
 });
+
+describe('GET /api/reviews/:review_id', () => {
+  test('Status 200, responds with a JSON object containing the review with the given id', () => {
+    return request(app)
+      .get('/api/reviews/2')
+      .expect(200)
+      .then((response) => {
+        expect(response.body.review).toEqual({
+          review_id: 2,
+          title: 'Jenga',
+          review_body: 'Fiddly fun for all the family',
+          designer: 'Leslie Scott',
+          review_img_url:
+            'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+          votes: 5,
+          category: 'dexterity',
+          owner: 'philippaclaire9',
+          created_at: '2021-01-18T10:01:41.251Z',
+          comments_count: '3',
+        });
+      });
+  });
+
+  test('Status 400, when provided with an invalid review id', () => {
+    return request(app)
+      .get('/api/reviews/nonValidId')
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      });
+  });
+
+  test('Status 404, when provided with a review id that does not exist in the database', () => {
+    const idNotInDatabase = 9999;
+    return request(app).get(`/api/reviews/${idNotInDatabase}`).expect(404);
+    then((response) => {
+      expect(response.body.msg).toBe('Not Found');
+    });
+  });
+
+  /* 
+- Well formed `review_id` that doesn't exist in the database (e.g. `/999999`)
+  */
+});
