@@ -1,9 +1,12 @@
-const { selectReviews, selectReviewById } = require('../models/reviews.model');
+const {
+  selectReviews,
+  selectReviewById,
+  updateReview,
+} = require('../models/reviews.model');
 
 exports.getReviews = (req, res) => {
   selectReviews()
     .then((reviews) => {
-      console.log('In reviews controller');
       //console.log(reviews);
       res.status(200).send({ reviews });
     })
@@ -20,5 +23,16 @@ exports.getReview = (req, res, next) => {
     })
     .catch((err) => {
       next(err);
+    });
+};
+exports.patchReview = (req, res) => {
+  const review_id = req.params.review_id;
+  const newVote = req.body.inc_votes;
+  updateReview(review_id, newVote)
+    .then((review) => {
+      res.status(200).send({ review });
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };

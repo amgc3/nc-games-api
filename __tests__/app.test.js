@@ -256,3 +256,28 @@ describe('GET /api/reviews/:review_id', () => {
       });
   });
 });
+describe('PATCH /api/reviews/:review_id', () => {
+  test('Status 200, responds with the updated review', () => {
+    const reviewUpdate = {
+      inc_votes: 1,
+    };
+    return request(app)
+      .patch('/api/reviews/2')
+      .send(reviewUpdate)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.review).toEqual({
+          review_id: 2,
+          title: 'Jenga',
+          review_body: 'Fiddly fun for all the family',
+          designer: 'Leslie Scott',
+          review_img_url:
+            'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+          votes: 6,
+          category: 'dexterity',
+          owner: 'philippaclaire9',
+          created_at: '2021-01-18T10:01:41.251Z',
+        });
+      });
+  });
+});

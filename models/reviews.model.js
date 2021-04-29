@@ -30,3 +30,20 @@ exports.selectReviewById = (reviewId) => {
       return review;
     });
 };
+exports.updateReview = (reviewId, newVote) => {
+  return db
+    .query(
+      `UPDATE reviews 
+        SET votes = votes + $1
+        WHERE review_id = $2
+        RETURNING * ;`,
+      [newVote, reviewId]
+    )
+    .then((result) => {
+      const review = result.rows[0];
+      if (!review) {
+        return Promise.reject({ status: 404, msg: 'Not Found' });
+      }
+      return review;
+    });
+};
