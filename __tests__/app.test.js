@@ -248,13 +248,11 @@ describe('GET /api/reviews/:review_id', () => {
 
   test('Status 404, when provided with a review id that does not exist in the database', () => {
     const idNotInDatabase = 9999;
-    return request(app).get(`/api/reviews/${idNotInDatabase}`).expect(404);
-    then((response) => {
-      expect(response.body.msg).toBe('Not Found');
-    });
+    return request(app)
+      .get(`/api/reviews/${idNotInDatabase}`)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe('Not Found');
+      });
   });
-
-  /* 
-- Well formed `review_id` that doesn't exist in the database (e.g. `/999999`)
-  */
 });
