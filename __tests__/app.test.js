@@ -280,4 +280,31 @@ describe('PATCH /api/reviews/:review_id', () => {
         });
       });
   });
+
+  test('Status 400, when provided with an invalid review id', () => {
+    const reviewUpdate = {
+      inc_votes: 1,
+    };
+    return request(app)
+      .patch('/api/reviews/nonValidId')
+      .send(reviewUpdate)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      });
+  });
+
+  test('Status 404, when provided with a review id that does not exist in the database', () => {
+    const reviewUpdate = {
+      inc_votes: 1,
+    };
+    const idNotInDatabase = 9999;
+    return request(app)
+      .patch(`/api/reviews/${idNotInDatabase}`)
+      .send(reviewUpdate)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe('Not Found');
+      });
+  });
 });
