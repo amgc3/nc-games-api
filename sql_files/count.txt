@@ -1,0 +1,6 @@
+You are now connected to database "nc_games_test" as user "anna".
+ review_id | title |          review_body          |   designer   |                              review_img_url                               | votes | category  |      owner      |         created_at         | comments_count 
+-----------+-------+-------------------------------+--------------+---------------------------------------------------------------------------+-------+-----------+-----------------+----------------------------+----------------
+         2 | Jenga | Fiddly fun for all the family | Leslie Scott | https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png |     6 | dexterity | philippaclaire9 | 2021-01-18 10:01:41.251+00 |              3
+(1 row)
+
