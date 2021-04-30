@@ -1,17 +1,16 @@
 const db = require('../db/connection');
 
 exports.selectReviews = () => {
-  return db.query(`SELECT * FROM reviews;`).then((result) => {
+  return db
+  .query(`SELECT reviews.* , COUNT(comments.review_id) 
+  AS comments_count FROM reviews JOIN comments
+  ON reviews.review_id = comments.review_id
+  GROUP BY reviews.review_id;`)
+  .then((result) => {
     return result.rows;
   });
 };
-// exports.selectReview = (reviewId) => {
-//   return db
-//     .query(`SELECT * FROM reviews WHERE review_id = $1 ;`, [reviewId])
-//     .then((result) => {
-//       return result.rows[0];
-//     });
-// };
+
 exports.selectReviewById = (reviewId) => {
   return db
     .query(
@@ -30,7 +29,7 @@ exports.selectReviewById = (reviewId) => {
       return review;
     });
 };
-exports.updateReview = (reviewId, newVote) => {
+exports.updateReview = (reviewId, newVote = 0) => {
   return db
     .query(
       `UPDATE reviews 
