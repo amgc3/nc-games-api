@@ -3,9 +3,10 @@ const db = require('../db/connection');
 exports.selectReviews = () => {
   return db
   .query(`SELECT reviews.* , COUNT(comments.review_id) 
-  AS comments_count FROM reviews JOIN comments
+  AS comments_count FROM reviews LEFT JOIN comments
   ON reviews.review_id = comments.review_id
-  GROUP BY reviews.review_id;`)
+  GROUP BY reviews.review_id
+  ORDER BY reviews.created_at;`)
   .then((result) => {
     return result.rows;
   });
@@ -46,3 +47,4 @@ exports.updateReview = (reviewId, newVote = 0) => {
       return review;
     });
 };
+
