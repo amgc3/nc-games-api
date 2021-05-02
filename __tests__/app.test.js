@@ -44,34 +44,35 @@ describe('GET /api/reviews', () => {
       .get('/api/reviews')
       .expect(200)
       .then((response) => {
-        expect(response.body.reviews).toEqual([
-          {
-            review_id: 3,
-            title: 'Ultimate Werewolf',
-            review_body: "We couldn't find the werewolf!",
-            designer: 'Akihisa Okui',
-            review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-            votes: 5,
-            category: 'social deduction',
-            owner: 'bainesface',
-            created_at: '2021-01-18T10:01:41.251Z',
-            comments_count: '3'
-          },
-          {
-            review_id: 2,
-            title: 'Jenga',
-            review_body: 'Fiddly fun for all the family',
-            designer: 'Leslie Scott',
-            review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
-            votes: 5,
-            category: 'dexterity',
-            owner: 'philippaclaire9',
-            created_at: '2021-01-18T10:01:41.251Z',
-            comments_count: '3'
-          },
-        ]);
+        expect(response.body.reviews.length).toBeGreaterThan(0)
+        console.log(response.body.reviews)
+        response.body.reviews.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              review_img_url: expect.any(String),
+              votes: expect.any(Number),
+              category: expect.any(String),
+              owner: expect.any(String),
+              created_at: expect.any(String),
+              comments_count: expect.any(String),
+            })
+          );
+        });
       });
   });
+
+  test('Status 200, default sort order is by date', () => {
+    return request(app)
+    .get('/api/reviews')
+    .expect(200)
+    .then(({body}) => {
+      expect(body.reviews).toBeSortedBy('created_at')
+    })
+  })
 });
 
 describe('GET /api/reviews/:review_id', () => {
