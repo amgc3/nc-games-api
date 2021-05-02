@@ -27,7 +27,7 @@
     "supertest": "^6.1.3"
   },
   "jest": {
-    "setupFilesAfterENV": ["jest-sorted"]
+    "setupFilesAfterEnv": ["jest-sorted"]
   },
   "dependencies": {
     "dotenv": "^8.2.0",
