@@ -1,6 +1,13 @@
 const db = require('../db/connection');
 
+// Promise.reject with our error object with status and msg this error object
+// that we have created is passed to our controller, then passed 
+// to app error handling middleware
 exports.selectReviews = (sort_by = 'created_at') => {
+  const allowedSortByColumns = ['created_at', 'title', 'votes', 'comments_count'];
+  if (!allowedSortByColumns.includes(sort_by)) {
+    return Promise.reject({status: 400, msg: 'Invalid sort_by query'});
+  }
   return db
   .query(`SELECT reviews.* , COUNT(comments.review_id) 
   AS comments_count FROM reviews LEFT JOIN comments

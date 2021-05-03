@@ -82,7 +82,7 @@ describe('GET /api/reviews', () => {
       });
   });
 
-  test.only('Status 400 when passed an invalid sort_by query', () => {
+  test('Status 400 when passed an invalid sort_by query', () => {
     return request(app)
       .get('/api/reviews?sort_by=not-a-column')
       .expect(400)
@@ -93,7 +93,13 @@ describe('GET /api/reviews', () => {
 
   //to check that the user can only sort by predefined columns
   test('Status 400, when passed a sort_by query that is not allowed', () => {
-    
+    return request(app)
+    .get('/api/reviews?sort_by=review_body')
+    .expect(400)
+    .then(({body}) => {
+      expect(body.msg).toBe('Invalid sort_by query')
+    })
+
   })
 });
 
