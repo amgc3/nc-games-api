@@ -44,8 +44,7 @@ describe('GET /api/reviews', () => {
       .get('/api/reviews')
       .expect(200)
       .then((response) => {
-        expect(response.body.reviews.length).toBeGreaterThan(0)
-        console.log(response.body.reviews)
+        expect(response.body.reviews.length).toBeGreaterThan(0);
         response.body.reviews.forEach((review) => {
           expect(review).toEqual(
             expect.objectContaining({
@@ -65,13 +64,36 @@ describe('GET /api/reviews', () => {
       });
   });
 
-  test('Status 200, default sort order is by date', () => {
+  test('Status 200, default sort order is by date, ascending', () => {
     return request(app)
-    .get('/api/reviews')
-    .expect(200)
-    .then(({body}) => {
-      expect(body.reviews).toBeSortedBy('created_at')
-    })
+      .get('/api/reviews')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeSortedBy('created_at');
+      });
+  });
+
+  test('Status 200, accepts a sort_by query', () => {
+    return request(app)
+      .get('/api/reviews?sort_by=title')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeSortedBy('title');
+      });
+  });
+
+  test.only('Status 400 when passed an invalid sort_by query', () => {
+    return request(app)
+      .get('/api/reviews?sort_by=not-a-column')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid sort_by query');
+      });
+  });
+
+  //to check that the user can only sort by predefined columns
+  test('Status 400, when passed a sort_by query that is not allowed', () => {
+    
   })
 });
 
@@ -201,7 +223,6 @@ describe('PATCH /api/reviews/:review_id', () => {
         expect(response.body.msg).toBe('Bad Request');
       });
   });
-
 
   test('Status 200, it ignores anything added on the request body after inc_votes ', () => {
     const reviewUpdate = { inc_votes: 2, name: 'Mitch' };

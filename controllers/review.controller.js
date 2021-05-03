@@ -5,11 +5,13 @@ const {
 } = require('../models/reviews.model');
 
 exports.getReviews = (req, res, next) => {
-  selectReviews()
+  const { sort_by } = req.query;
+  selectReviews(sort_by)
     .then((reviews) => {
       res.status(200).send({ reviews });
     })
     .catch((err) => {
+      console.log(err)
       next(err);
     });
 };
@@ -21,6 +23,7 @@ exports.getReview = (req, res, next) => {
       res.status(200).send({ review });
     })
     .catch((err) => {
+      console.log(err)
       next(err);
     });
 };

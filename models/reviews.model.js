@@ -1,12 +1,12 @@
 const db = require('../db/connection');
 
-exports.selectReviews = () => {
+exports.selectReviews = (sort_by = 'created_at') => {
   return db
   .query(`SELECT reviews.* , COUNT(comments.review_id) 
   AS comments_count FROM reviews LEFT JOIN comments
   ON reviews.review_id = comments.review_id
   GROUP BY reviews.review_id
-  ORDER BY reviews.created_at;`)
+  ORDER BY reviews.${sort_by} ASC;`)
   .then((result) => {
     return result.rows;
   });
