@@ -10,3 +10,7 @@ SELECT reviews.* , COUNT(comments.review_id)
   LEFT JOIN comments ON reviews.review_id = comments.review_id
   GROUP BY reviews.review_id
   ORDER BY reviews.created_at ASC;
+
+SELECT * FROM comments
+    WHERE review_id = 2
+    RETURNING *;
