@@ -7,5 +7,6 @@ GROUP BY reviews.review_id;
 
 SELECT reviews.* , COUNT(comments.review_id) 
   AS comments_count FROM reviews 
-  JOIN comments ON reviews.review_id = comments.review_id
-  GROUP BY reviews.review_id;
+  LEFT JOIN comments ON reviews.review_id = comments.review_id
+  GROUP BY reviews.review_id
+  ORDER BY reviews.created_at ASC;
