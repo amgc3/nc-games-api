@@ -99,7 +99,18 @@ describe('GET /api/reviews', () => {
     .then(({body}) => {
       expect(body.msg).toBe('Invalid sort_by query')
     })
+  })
 
+  test('Status 200, reviews can be filtered by category', () => {
+    return request(app)
+    .get('/api/reviews?category=dexterity')
+    .expect(200)
+    .then(({body}) => {
+      expect(body.reviews.length).toBe(1);
+      body.reviews.forEach((review) => {
+        expect(review.category).toBe('dexterity');
+      })
+    })
   })
 });
 
