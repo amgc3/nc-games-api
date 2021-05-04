@@ -2,6 +2,7 @@ const {
   selectReviews,
   selectReviewById,
   updateReview,
+  selectComments
 } = require('../models/reviews.model');
 
 exports.getReviews = (req, res, next) => {
@@ -11,7 +12,6 @@ exports.getReviews = (req, res, next) => {
       res.status(200).send({ reviews });
     })
     .catch((err) => {
-      console.log(err)
       next(err);
     });
 };
@@ -23,7 +23,6 @@ exports.getReview = (req, res, next) => {
       res.status(200).send({ review });
     })
     .catch((err) => {
-      console.log(err)
       next(err);
     });
 };
@@ -38,3 +37,15 @@ exports.patchReview = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getComments = (req, res, next) => {
+  const review_id = req.params.review_id;
+  selectComments(review_id)
+  .then((comments) => {
+    res.status(200).send({comments})
+  })
+  .catch((err) => {
+    console.log(err)
+    next(err);
+  })
+}

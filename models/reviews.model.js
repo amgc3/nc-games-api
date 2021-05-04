@@ -14,7 +14,7 @@ exports.selectReviews = (sort_by = 'created_at', category) => {
   FROM reviews 
   LEFT JOIN comments ON reviews.review_id = comments.review_id
   `;
-  
+
   // allows for multiple fiters
   const queryValues = [];
   if (category) {
@@ -68,4 +68,14 @@ exports.updateReview = (reviewId, newVote = 0) => {
       return review;
     });
 };
+exports.selectComments = (review_id) => {
+  return db.query(
+    `SELECT comment_id, votes, created_at, author, body  FROM comments
+    WHERE review_id = $1;`,
+    [review_id]
+  )
+  .then((result) => {
+    return result.rows
+  })
+}
 
