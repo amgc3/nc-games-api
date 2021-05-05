@@ -82,6 +82,18 @@ describe('GET /api/reviews', () => {
       });
   });
 
+  test('Status 200, reviews can be filtered by category', () => {
+    return request(app)
+      .get('/api/reviews?category=dexterity')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews.length).toBe(1);
+        body.reviews.forEach((review) => {
+          expect(review.category).toBe('dexterity');
+        });
+      });
+  });
+
   test('Status 400 when passed an invalid sort_by query', () => {
     return request(app)
       .get('/api/reviews?sort_by=not-a-column')
@@ -94,24 +106,12 @@ describe('GET /api/reviews', () => {
   //to check that the user can only sort by predefined columns
   test('Status 400, when passed a sort_by query that is not allowed', () => {
     return request(app)
-    .get('/api/reviews?sort_by=review_body')
-    .expect(400)
-    .then(({body}) => {
-      expect(body.msg).toBe('Invalid sort_by query')
-    })
-  })
-
-  test('Status 200, reviews can be filtered by category', () => {
-    return request(app)
-    .get('/api/reviews?category=dexterity')
-    .expect(200)
-    .then(({body}) => {
-      expect(body.reviews.length).toBe(1);
-      body.reviews.forEach((review) => {
-        expect(review.category).toBe('dexterity');
-      })
-    })
-  })
+      .get('/api/reviews?sort_by=review_body')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Invalid sort_by query');
+      });
+  });
 });
 
 describe('GET /api/reviews/:review_id', () => {
@@ -180,33 +180,6 @@ describe('PATCH /api/reviews/:review_id', () => {
       });
   });
 
-  test('Status 400, when provided with an invalid review id', () => {
-    const reviewUpdate = {
-      inc_votes: 1,
-    };
-    return request(app)
-      .patch('/api/reviews/nonValidId')
-      .send(reviewUpdate)
-      .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe('Bad Request');
-      });
-  });
-
-  test('Status 404, when provided with a review id that does not exist in the database', () => {
-    const reviewUpdate = {
-      inc_votes: 1,
-    };
-    const idNotInDatabase = 9999;
-    return request(app)
-      .patch(`/api/reviews/${idNotInDatabase}`)
-      .send(reviewUpdate)
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe('Not Found');
-      });
-  });
-
   test('Status 200, if no inc_votes on request body, the returned review is unchanged', () => {
     const reviewUpdate = {};
     return request(app)
@@ -226,18 +199,6 @@ describe('PATCH /api/reviews/:review_id', () => {
           owner: 'philippaclaire9',
           created_at: '2021-01-18T10:01:41.251Z',
         });
-      });
-  });
-  // this passes since it would be a code: '22P02' which is handled
-  // and returns a 400
-  test('Status 400, if given invalid inc_votes value', () => {
-    const reviewUpdate = { inc_votes: 'cat' };
-    return request(app)
-      .patch('/api/reviews/2')
-      .send(reviewUpdate)
-      .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe('Bad Request');
       });
   });
 
@@ -262,6 +223,46 @@ describe('PATCH /api/reviews/:review_id', () => {
         });
       });
   });
+
+  test('Status 400, when provided with an invalid review id', () => {
+    const reviewUpdate = {
+      inc_votes: 1,
+    };
+    return request(app)
+      .patch('/api/reviews/nonValidId')
+      .send(reviewUpdate)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      });
+  });
+
+  // this passes since it would be a code: '22P02' which is handled
+  // and returns a 400
+  test('Status 400, if given invalid inc_votes value', () => {
+    const reviewUpdate = { inc_votes: 'cat' };
+    return request(app)
+      .patch('/api/reviews/2')
+      .send(reviewUpdate)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      });
+  });
+
+  test('Status 404, when provided with a review id that does not exist in the database', () => {
+    const reviewUpdate = {
+      inc_votes: 1,
+    };
+    const idNotInDatabase = 9999;
+    return request(app)
+      .patch(`/api/reviews/${idNotInDatabase}`)
+      .send(reviewUpdate)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe('Not Found');
+      });
+  });
 });
 describe.only('GET /api/reviews/:review_id/comments', () => {
   test('Status 200, responds with an array of comments for the given review_id', () => {
@@ -282,7 +283,7 @@ describe.only('GET /api/reviews/:review_id/comments', () => {
           );
         });
       });
-  })
+  });
 
   test('Status 400, when provided with an invalid review id', () => {
     return request(app)
@@ -299,53 +300,54 @@ describe.only('GET /api/reviews/:review_id/comments', () => {
       .get(`/api/reviews/${idNotInDatabase}/comments`)
       .expect(404)
       .then((response) => {
-        console.log(response.body)
+        console.log(response.body);
         expect(response.body.msg).toBe('Not Found');
       });
   });
-
-})
+});
 describe('GET /api', () => {
   test('returns a json file representing all the endpoints', () => {
     return request(app)
-    .get('/api')
-    .expect(200)
-    .then((response) => {
-      expect(response.body).toEqual({
-        "GET /api": {
-          "description": "serves up a json representation of all the available endpoints of the api"
-        },
-        "GET /api/categories": {
-          "description": "serves an array of all categories",
-          "queries": [],
-          "exampleResponse": {
-            "categories": [
-              {
-                "description": "Players attempt to uncover each other's hidden role",
-                "slug": "Social deduction"
-              }
-            ]
-          }
-        },
-        "GET /api/reviews": {
-          "description": "serves an array of all reviews",
-          "queries": ["category", "sort_by", "order"],
-          "exampleResponse": {
-            "reviews": [
-              {
-                "title": "One Night Ultimate Werewolf",
-                "designer": "Akihisa Okui",
-                "owner": "happyamy2016",
-                "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-                "category": "hidden-roles",
-                "created_at": 1610964101251,
-                "votes": 5
-              }
-            ]
-          }
-        }
-      }
-      )
-    })
-  })
-})
+      .get('/api')
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual({
+          'GET /api': {
+            description:
+              'serves up a json representation of all the available endpoints of the api',
+          },
+          'GET /api/categories': {
+            description: 'serves an array of all categories',
+            queries: [],
+            exampleResponse: {
+              categories: [
+                {
+                  description:
+                    "Players attempt to uncover each other's hidden role",
+                  slug: 'Social deduction',
+                },
+              ],
+            },
+          },
+          'GET /api/reviews': {
+            description: 'serves an array of all reviews',
+            queries: ['category', 'sort_by', 'order'],
+            exampleResponse: {
+              reviews: [
+                {
+                  title: 'One Night Ultimate Werewolf',
+                  designer: 'Akihisa Okui',
+                  owner: 'happyamy2016',
+                  review_img_url:
+                    'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+                  category: 'hidden-roles',
+                  created_at: 1610964101251,
+                  votes: 5,
+                },
+              ],
+            },
+          },
+        });
+      });
+  });
+});
