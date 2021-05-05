@@ -12,5 +12,6 @@ SELECT reviews.* , COUNT(comments.review_id)
   ORDER BY reviews.created_at ASC;
 
 SELECT * FROM comments
-    WHERE review_id = 2
-    RETURNING *;
+    WHERE review_id = 2;
+
+SELECT * FROM users;
