@@ -263,7 +263,7 @@ describe('PATCH /api/reviews/:review_id', () => {
       });
   });
 });
-describe('GET /api/reviews/:review_id/comments', () => {
+describe.only('GET /api/reviews/:review_id/comments', () => {
   test('Status 200, responds with an array of comments for the given review_id', () => {
     return request(app)
       .get('/api/reviews/2/comments')
@@ -284,4 +284,68 @@ describe('GET /api/reviews/:review_id/comments', () => {
       });
   })
 
+  test('Status 400, when provided with an invalid review id', () => {
+    return request(app)
+      .get('/api/reviews/nonValidId/comments')
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      });
+  });
+
+  test('Status 404, when provided with a review id that does not exist in the database', () => {
+    const idNotInDatabase = 9999;
+    return request(app)
+      .get(`/api/reviews/${idNotInDatabase}/comments`)
+      .expect(404)
+      .then((response) => {
+        console.log(response.body)
+        expect(response.body.msg).toBe('Not Found');
+      });
+  });
+
+})
+describe('GET /api', () => {
+  test('returns a json file representing all the endpoints', () => {
+    return request(app)
+    .get('/api')
+    .expect(200)
+    .then((response) => {
+      expect(response.body).toEqual({
+        "GET /api": {
+          "description": "serves up a json representation of all the available endpoints of the api"
+        },
+        "GET /api/categories": {
+          "description": "serves an array of all categories",
+          "queries": [],
+          "exampleResponse": {
+            "categories": [
+              {
+                "description": "Players attempt to uncover each other's hidden role",
+                "slug": "Social deduction"
+              }
+            ]
+          }
+        },
+        "GET /api/reviews": {
+          "description": "serves an array of all reviews",
+          "queries": ["category", "sort_by", "order"],
+          "exampleResponse": {
+            "reviews": [
+              {
+                "title": "One Night Ultimate Werewolf",
+                "designer": "Akihisa Okui",
+                "owner": "happyamy2016",
+                "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                "category": "hidden-roles",
+                "created_at": 1610964101251,
+                "votes": 5
+              }
+            ]
+          }
+        }
+      }
+      )
+    })
+  })
 })

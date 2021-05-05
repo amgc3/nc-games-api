@@ -15,7 +15,7 @@ exports.selectReviews = (sort_by = 'created_at', category) => {
   LEFT JOIN comments ON reviews.review_id = comments.review_id
   `;
 
-  // allows for multiple fiters
+
   const queryValues = [];
   if (category) {
     coreQueryString += `WHERE category = $1`;
@@ -75,6 +75,9 @@ exports.selectComments = (review_id) => {
     [review_id]
   )
   .then((result) => {
+    if (result.rows.length === 0) {
+      return Promise.reject({status: 404, msg:'Not Found'});
+    }
     return result.rows
   })
 }
