@@ -4,9 +4,6 @@ const apiRouter = require('./routers/api.router.js');
 const app = express();
 app.use(express.json());
 
-// app.get('/', (req, res) => {
-//   res.status(200).send('Welcome');
-// });
 app.use('/api', apiRouter);
 
 
@@ -18,6 +15,7 @@ app.use((err, req, res, next) => {
   }else if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else {
+    console.log(err)
     res.status(500).send({ msg: 'Internal Server Error' });
   }
 });
