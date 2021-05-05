@@ -82,3 +82,12 @@ exports.selectComments = (review_id) => {
   })
 }
 
+exports.insertComment = (review_id, author, body) => {
+  return db.query(`INSERT INTO comments (review_id, author, body)
+  VALUES ($1, $2, $3) RETURNING*;`, [review_id, author, body])
+  .then((result) => {
+    console.log(result.rows)
+    return result.rows[0];
+  })
+}
+

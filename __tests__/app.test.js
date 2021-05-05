@@ -264,7 +264,7 @@ describe('PATCH /api/reviews/:review_id', () => {
       });
   });
 });
-describe.only('GET /api/reviews/:review_id/comments', () => {
+describe('GET /api/reviews/:review_id/comments', () => {
   test('Status 200, responds with an array of comments for the given review_id', () => {
     return request(app)
       .get('/api/reviews/2/comments')
@@ -300,7 +300,6 @@ describe.only('GET /api/reviews/:review_id/comments', () => {
       .get(`/api/reviews/${idNotInDatabase}/comments`)
       .expect(404)
       .then((response) => {
-        console.log(response.body);
         expect(response.body.msg).toBe('Not Found');
       });
   });
@@ -351,3 +350,29 @@ describe('GET /api', () => {
       });
   });
 });
+
+// check that comment contains those key value pairs
+// or check each one with a toBe() matcher
+describe('POST /api/reviews/:review_id/comments', () => {
+  test('Status 200, returns the posted comment', () => {
+    const newComment = {
+      author: 'mallionaire',
+      body: "I don't like rats very much"
+    }
+    return request(app)
+    .post('/api/reviews/1/comments')
+    .send(newComment)
+    .expect(201)
+    .then((response) => {
+      expect(response.body.comment).toEqual(expect.objectContaining({
+        author: 'mallionaire',
+        body: "I don't like rats very much",
+        review_id: 1
+      })
+      )
+    })
+
+
+  })
+
+})
