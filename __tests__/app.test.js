@@ -311,40 +311,78 @@ describe('GET /api', () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual({
-          'GET /api': {
-            description:
-              'serves up a json representation of all the available endpoints of the api',
+          "GET /api": {
+            "description": "serves up a json representation of all the available endpoints of the api"
           },
-          'GET /api/categories': {
-            description: 'serves an array of all categories',
-            queries: [],
-            exampleResponse: {
-              categories: [
+          "GET /api/categories": {
+            "description": "serves an array of all categories",
+            "queries": [],
+            "exampleResponse": {
+              "categories": [
                 {
-                  description:
-                    "Players attempt to uncover each other's hidden role",
-                  slug: 'Social deduction',
-                },
-              ],
-            },
+                  "description": "Players attempt to uncover each other's hidden role",
+                  "slug": "Social deduction"
+                }
+              ]
+            }
           },
-          'GET /api/reviews': {
-            description: 'serves an array of all reviews',
-            queries: ['category', 'sort_by', 'order'],
-            exampleResponse: {
-              reviews: [
+          "GET /api/reviews": {
+            "description": "serves an array of all reviews",
+            "queries": ["category", "sort_by", "order"],
+            "exampleResponse": {
+              "reviews": [
                 {
-                  title: 'One Night Ultimate Werewolf',
-                  designer: 'Akihisa Okui',
-                  owner: 'happyamy2016',
-                  review_img_url:
-                    'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-                  category: 'hidden-roles',
-                  created_at: 1610964101251,
-                  votes: 5,
-                },
-              ],
-            },
+                  "title": "One Night Ultimate Werewolf",
+                  "designer": "Akihisa Okui",
+                  "owner": "happyamy2016",
+                  "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                  "category": "hidden-roles",
+                  "created_at": 1610964101251,
+                  "votes": 5
+                }
+              ]
+            }
+          },
+          "GET /api/reviews/:review_id": {
+            "description": "serves the review with the given id",
+            "queries": [],
+            "exampleResponse": {
+              "review": 
+                {
+                  "title": "One Night Ultimate Werewolf",
+                  "designer": "Akihisa Okui",
+                  "owner": "happyamy2016",
+                  "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                  "category": "hidden-roles",
+                  "created_at": 1610964101251,
+                  "votes": 5
+                }
+            }
+          },
+        
+          "GET /api/reviews/:review_id/comments": {
+            "description": "serves an array of comments for the given review",
+            "queries": [],
+            "exampleResponse": {
+              "comments":[
+                {
+                  "body": "My dog loved this game too!",
+                  "author": "tickle122",
+                  "votes": 3,
+                  "created_at": 1610964545410
+                }
+            ]} 
+          },
+          "POST /api/reviews/:review_id/comments": {
+            "description": "returns the body and author and review id of the posted comment",
+            "queries": [],
+            "exampleResponse": {
+              "comment": {
+                "author": "weegembump",
+                "body": "I didn't know dogs could play games",
+                "review_id": 13
+              }
+            }
           },
         });
       });
@@ -371,8 +409,5 @@ describe('POST /api/reviews/:review_id/comments', () => {
       })
       )
     })
-
-
   })
-
 })
