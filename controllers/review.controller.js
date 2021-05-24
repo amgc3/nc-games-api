@@ -53,13 +53,11 @@ exports.getComments = (req, res, next) => {
 exports.postComment = (req, res, next) => {
   const {review_id } = req.params;
   const {author, body} = req.body
-  console.log(review_id, author, body)
   insertComment(review_id, author, body)
   .then((comment) => {
     res.status(201).send({comment});
   })
   .catch((err) => {
-    console.log(err)
     next(err)
   })
 }
