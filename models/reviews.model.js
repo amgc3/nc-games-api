@@ -24,7 +24,7 @@ exports.selectReviews = (sort_by = 'created_at', category) => {
 
 coreQueryString += `
   GROUP BY reviews.review_id
-  ORDER BY reviews.${sort_by} ASC`
+  ORDER BY ${sort_by} ASC`
   
   return db
   .query(coreQueryString, queryValues)
